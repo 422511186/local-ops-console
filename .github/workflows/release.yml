@@ -17,8 +17,12 @@ jobs:
         include:
           - arch: arm64
             runner: macos-14
+            pc_arch: arm64
+            kc_arch: ""
           - arch: x64
-            runner: macos-13
+            runner: macos-14
+            pc_arch: amd64
+            kc_arch: "x86_64"
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
@@ -31,13 +35,20 @@ jobs:
 
       - name: Install Caddy and Process Compose
         env:
-          ARCH_SUFFIX: ${{ matrix.arch == 'arm64' && 'arm64' || 'amd64' }}
+          PC_ARCH: ${{ matrix.pc_arch }}
+          BUILD_ARCH: ${{ matrix.arch }}
         run: |
-          brew install caddy
-          curl -L "https://github.com/F1bonacc1/process-compose/releases/latest/download/process-compose_darwin_${ARCH_SUFFIX}.tar.gz" -o /tmp/pc.tar.gz
+          if [[ "$BUILD_ARCH" == "arm64" ]]; then
+            brew install caddy
+          else
+            curl -L "https://caddyserver.com/api/download?os=darwin&arch=amd64" -o /usr/local/bin/caddy
+            sudo chmod +x /usr/local/bin/caddy
+          fi
+          curl -L "https://github.com/F1bonacc1/process-compose/releases/latest/download/process-compose_darwin_${PC_ARCH}.tar.gz" -o /tmp/pc.tar.gz
           tar -xzf /tmp/pc.tar.gz -C /tmp
           sudo mv /tmp/process-compose /usr/local/bin/process-compose
           sudo chmod +x /usr/local/bin/process-compose
+          caddy version
           process-compose version
 
       - name: Install desktop dependencies
@@ -46,6 +57,8 @@ jobs:
 
       - name: Build DMG
         working-directory: desktop
+        env:
+          LOCAL_OPS_KEYCHAIN_ARCH: ${{ matrix.kc_arch }}
         run: |
           npm run icon
           npm run bundle
