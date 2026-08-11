@@ -30,7 +30,9 @@ jobs:
           cache-dependency-path: desktop/package-lock.json
 
       - name: Install Caddy and Process Compose
-        run: brew install caddy process-compose
+        run: |
+          brew install caddy
+          brew install F1bonacc1/process-compose/process-compose
 
       - name: Install desktop dependencies
         working-directory: desktop
