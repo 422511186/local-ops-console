@@ -2,7 +2,7 @@
 
 ## Supported build target
 
-Local Ops v1.8.5 ships macOS packages for both Apple Silicon (`arm64`) and Intel (`x64`). Universal packages are not part of the current release matrix; instead, two DMGs are produced from native builds on each architecture.
+Local Ops v1.9.0 ships macOS packages for both Apple Silicon (`arm64`) and Intel (`x64`). Universal packages are not part of the current release matrix; instead, two DMGs are produced from native builds on each architecture.
 
 Before describing a change as released, check [Authoritative Project Status](PROJECT_STATUS.md). It records the installed build, public GitHub/tag/artifact baseline, and private Forgejo/runtime baseline separately. A private post-release hotfix is not part of an older public tag merely because its App bundle still carries the same version number.
 
@@ -124,9 +124,9 @@ Output (depending on the build architecture):
 
 ```text
 desktop/dist/mac-arm64/Local Ops.app
-desktop/dist/Local-Ops-1.8.5-arm64.dmg
+desktop/dist/Local-Ops-1.9.0-arm64.dmg
 desktop/dist/mac-x64/Local Ops.app
-desktop/dist/Local-Ops-1.8.5-x64.dmg
+desktop/dist/Local-Ops-1.9.0-x64.dmg
 ```
 
 > Build the `arm64` DMG on an Apple Silicon Mac and the `x64` DMG on an Intel Mac. `scripts/build-app.zsh` auto-selects the host architecture; override with `LOCAL_OPS_BUILD_ARCH=arm64|x64` if needed. Cross-architecture builds require supplying matching Caddy and Process Compose binaries via `PATH` (and optionally setting `LOCAL_OPS_KEYCHAIN_ARCH=arm64|x86_64|universal` for the Keychain helper).

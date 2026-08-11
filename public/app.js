@@ -1,11 +1,11 @@
-import { ICON_LIBRARY, ICON_BY_ID } from "./icon-library.js?v=1.8.5";
-import { getLocale, localizeDocument, normalizeLocale, setLocale, tr } from "./i18n.js?v=1.8.5";
+import { ICON_LIBRARY, ICON_BY_ID } from "./icon-library.js?v=1.9.0";
+import { getLocale, localizeDocument, normalizeLocale, setLocale, tr } from "./i18n.js?v=1.9.0";
 import {
   tunnelDisplayState,
   tunnelFailureMessage,
   tunnelPrimaryAction
-} from "./tunnel-ui.js?v=1.8.5";
-import { bootstrapConfigChanged } from "./resource-sync.js?v=1.8.5";
+} from "./tunnel-ui.js?v=1.9.0";
+import { bootstrapConfigChanged } from "./resource-sync.js?v=1.9.0";
 
 const LANGUAGE_STORAGE_KEY = "local-ops-language";
 setLocale(normalizeLocale(localStorage.getItem(LANGUAGE_STORAGE_KEY)));

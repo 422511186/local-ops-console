@@ -1,6 +1,6 @@
 {
   "name": "local-ops-desktop",
-  "version": "1.8.5",
+  "version": "1.9.0",
   "description": "Native macOS shell for the Local Ops control plane",
   "private": true,
   "main": "main.cjs",
@@ -60,7 +60,7 @@
     },
     "afterPack": "scripts/after-pack.cjs",
     "mac": {
-      "bundleVersion": "1.8.5",
+      "bundleVersion": "1.9.0",
       "minimumSystemVersion": "12.0.0",
       "target": [
         {

@@ -4,6 +4,19 @@ All notable changes to Local Ops are documented here. Versions follow [Semantic 
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-08-11
+
+### Added
+
+- Ship Intel (`x64`) macOS DMG alongside the Apple Silicon (`arm64`) build, with architecture-aware build scripts and Keychain helper cross-compilation support.
+- Add a GitHub Actions release workflow that builds both `arm64` and `x64` DMGs on native macOS runners and publishes them to a GitHub Release on tag push.
+
+### Changed
+
+- Remove the hard dependency on Docker Desktop; Local Ops now works with any Docker CLI-compatible runtime on `PATH` (Docker Desktop, Colima, OrbStack, Rancher Desktop, Podman, etc.).
+- Remove the automatic Docker Desktop launch and Engine wait logic from the tray menu, web console, and session-restore flow; users start their own Docker runtime and the container list refreshes automatically.
+- Default `pack` and `dmg` npm scripts no longer lock to `--arm64`; use `pack:arm64`/`pack:x64` or `dmg:arm64`/`dmg:x64` for architecture-specific builds.
+
 ## [1.8.5] - 2026-08-08
 
 ### Added
@@ -135,6 +148,7 @@ All notable changes to Local Ops are documented here. Versions follow [Semantic 
 - Added the self-contained Electron DMG, automatic backend installation, portless loopback access, and bundled Caddy / Process Compose binaries.
 
 [1.7.0]: https://github.com/Arvinnma/local-ops-console/releases/tag/v1.7.0
+[1.9.0]: https://github.com/Arvinnma/local-ops-console/releases/tag/v1.9.0
 [1.8.5]: https://github.com/Arvinnma/local-ops-console/releases/tag/v1.8.5
 [1.8.4]: https://github.com/Arvinnma/local-ops-console/releases/tag/v1.8.4
 [1.8.3]: https://github.com/Arvinnma/local-ops-console/releases/tag/v1.8.3

@@ -28,7 +28,7 @@ Local Ops 把 Electron 桌面 App、浏览器控制台、Process Compose 和 Cad
 - Docker 功能可选；支持任何 Docker CLI 兼容的运行时（Docker Desktop、Colima、OrbStack、Rancher Desktop、Podman 等），只要 `docker` 命令在 PATH 中即可。Local Ops 不会自动拉起运行时，请自行启动，容器列表会自动刷新。
 - 系统自带 Terminal.app；iTerm2 为可选项
 
-v1.8.5 同时提供 `arm64` 与 `x64` 安装包，请按机型选择对应版本。
+v1.9.0 同时提供 `arm64` 与 `x64` 安装包，请按机型选择对应版本。
 
 ## 功能一览
 
@@ -49,7 +49,7 @@ v1.8.5 同时提供 `arm64` 与 `x64` 安装包，请按机型选择对应版本
 
 ## 安装
 
-1. 从 [Releases](https://github.com/Arvinnma/local-ops-console/releases/latest) 下载 `Local-Ops-1.8.5-arm64.dmg`（Apple Silicon）或 `Local-Ops-1.8.5-x64.dmg`（Intel）。
+1. 从 [Releases](https://github.com/Arvinnma/local-ops-console/releases/latest) 下载 `Local-Ops-1.9.0-arm64.dmg`（Apple Silicon）或 `Local-Ops-1.9.0-x64.dmg`（Intel）。
 2. 打开 DMG，把 **Local Ops** 拖到“应用程序”。
 3. 从“应用程序”启动 **Local Ops**。
 
@@ -155,13 +155,13 @@ npm ci
 npm run dmg
 ```
 
-安装包输出到 `desktop/dist/Local-Ops-1.8.5-arm64.dmg`（Apple Silicon）或 `desktop/dist/Local-Ops-1.8.5-x64.dmg`（Intel）。打包步骤会把当前 Caddy 与 Process Compose 二进制复制进 App。
+安装包输出到 `desktop/dist/Local-Ops-1.9.0-arm64.dmg`（Apple Silicon）或 `desktop/dist/Local-Ops-1.9.0-x64.dmg`（Intel）。打包步骤会把当前 Caddy 与 Process Compose 二进制复制进 App。
 
 修改打包、原生 Helper、回环监听或 Electron 安全设置前，请先阅读[开发与发布文档](docs/DEVELOPMENT.md)。
 
 ## 发布验收
 
-v1.8.5 发布门禁覆盖：语法和单元测试、Caddy/PF 动态端口同步、中英文静态文案覆盖、配置往返、API 安全校验、可信菜单栏操作与停止确认、期望状态保留、真实子进程对账、重复端口保护、进程树清理、服务生命周期与日志、SSH 网络门控与有限重试、完整域名入口检查、Caddy 路径路由、Docker 容器读取、加密私钥钥匙串集成、登录项静默启动、菜单栏重复恢复窗口、窄窗口浏览器 QA、App 签名与架构，以及挂载 DMG 的布局/签名检查。
+v1.9.0 发布门禁覆盖：语法和单元测试、Caddy/PF 动态端口同步、中英文静态文案覆盖、配置往返、API 安全校验、可信菜单栏操作与停止确认、期望状态保留、真实子进程对账、重复端口保护、进程树清理、服务生命周期与日志、SSH 网络门控与有限重试、完整域名入口检查、Caddy 路径路由、Docker 容器读取、加密私钥钥匙串集成、登录项静默启动、菜单栏重复恢复窗口、窄窗口浏览器 QA、App 签名与架构，以及挂载 DMG 的布局/签名检查。
 
 维护者在对外描述修复前必须先查看[项目权威状态](docs/PROJECT_STATUS.md)：公开 GitHub Release 与私有已验证运行基线可能处于不同提交。可重复执行的验收步骤见[发布与热修回归手册](docs/RELEASE_REGRESSION.md)。
 

@@ -28,7 +28,7 @@ Local Ops combines an Electron desktop app, a browser console, Process Compose, 
 - Docker is optional; any Docker CLI-compatible runtime on `PATH` (Docker Desktop, Colima, OrbStack, Rancher Desktop, Podman, etc.) is supported. Local Ops does not launch the runtime — start it yourself and the container list refreshes automatically.
 - Terminal.app is built in; iTerm2 is optional
 
-Both `arm64` and `x64` DMGs are provided in v1.8.5; pick the one matching your Mac.
+Both `arm64` and `x64` DMGs are provided in v1.9.0; pick the one matching your Mac.
 
 ## What it manages
 
@@ -49,7 +49,7 @@ Both `arm64` and `x64` DMGs are provided in v1.8.5; pick the one matching your M
 
 ## Install
 
-1. Download `Local-Ops-1.8.5-arm64.dmg` (Apple Silicon) or `Local-Ops-1.8.5-x64.dmg` (Intel) from the [latest release](https://github.com/Arvinnma/local-ops-console/releases/latest).
+1. Download `Local-Ops-1.9.0-arm64.dmg` (Apple Silicon) or `Local-Ops-1.9.0-x64.dmg` (Intel) from the [latest release](https://github.com/Arvinnma/local-ops-console/releases/latest).
 2. Open the DMG and drag **Local Ops** to **Applications**.
 3. Launch **Local Ops** from Applications.
 
@@ -159,13 +159,13 @@ npm ci
 npm run dmg
 ```
 
-The distributable is written to `desktop/dist/Local-Ops-1.8.5-arm64.dmg` (Apple Silicon) or `desktop/dist/Local-Ops-1.8.5-x64.dmg` (Intel). The bundle step copies the current Caddy and Process Compose binaries into the application package.
+The distributable is written to `desktop/dist/Local-Ops-1.9.0-arm64.dmg` (Apple Silicon) or `desktop/dist/Local-Ops-1.9.0-x64.dmg` (Intel). The bundle step copies the current Caddy and Process Compose binaries into the application package.
 
 Read [Development and Release Guide](docs/DEVELOPMENT.md) before changing packaging, native helpers, loopback bindings, or Electron security settings.
 
 ## Verification
 
-The v1.8.5 release gate covers syntax and unit tests, dynamic Caddy/PF port synchronization, bilingual static-copy coverage, configuration round trips, API security checks, trusted menu-bar actions and stop confirmation, desired-state preservation, managed-child reconciliation, duplicate-port protection, process-tree cleanup, service lifecycle and logs, SSH network gating with bounded retries, complete domain-entry checks, Caddy path routing, Docker state reads, encrypted-key Keychain integration, silent login-item startup, repeated menu-bar window restoration, responsive browser QA, application signature and architecture, and mounted-DMG layout/signature checks.
+The v1.9.0 release gate covers syntax and unit tests, dynamic Caddy/PF port synchronization, bilingual static-copy coverage, configuration round trips, API security checks, trusted menu-bar actions and stop confirmation, desired-state preservation, managed-child reconciliation, duplicate-port protection, process-tree cleanup, service lifecycle and logs, SSH network gating with bounded retries, complete domain-entry checks, Caddy path routing, Docker state reads, encrypted-key Keychain integration, silent login-item startup, repeated menu-bar window restoration, responsive browser QA, application signature and architecture, and mounted-DMG layout/signature checks.
 
 Maintainers must consult [Authoritative Project Status](docs/PROJECT_STATUS.md) before describing a fix as public: the public GitHub release and the privately verified runtime can intentionally be at different commits. The repeatable verification sequence is in [Release and Hotfix Regression Manual](docs/RELEASE_REGRESSION.md).
 
