@@ -176,12 +176,6 @@ const server = http.createServer(async (request, response) => {
       return sendJson(response, 200, { ok: true, ...result });
     }
 
-    if (request.method === "POST" && url.pathname === "/api/docker/desktop/start") {
-      await runTool("/usr/bin/open", ["-a", "Docker"], 15000);
-      invalidateDocker();
-      return sendJson(response, 200, { ok: true });
-    }
-
     if (request.method === "POST" && url.pathname === "/api/startup/app") {
       return sendJson(response, 200, { ok: true, ...(await applyAppStartupActions(catalog)) });
     }
@@ -602,17 +596,13 @@ async function getDockerState(force = false) {
   const now = Date.now();
   if (!force && dockerCache.value && now - dockerCache.at < 1800) return dockerCache.value;
 
-  const appInstalled = process.platform === "darwin" && [
-    "/Applications/Docker.app",
-    path.join(os.homedir(), "Applications", "Docker.app")
-  ].some((item) => fs.existsSync(item));
   let clientVersion = "";
   try {
     const result = await runDocker(["version", "--format", "{{.Client.Version}}"], 5000);
     clientVersion = result.stdout.trim();
   } catch (error) {
     if (error.code === "ENOENT") {
-      const unavailable = { available: false, appInstalled, daemonOnline: false, clientVersion: "", serverVersion: "", error: "没有找到 Docker CLI", containers: [] };
+      const unavailable = { available: false, daemonOnline: false, clientVersion: "", serverVersion: "", error: "没有找到 Docker CLI", containers: [] };
       dockerCache = { at: now, value: unavailable };
       return unavailable;
     }
@@ -629,7 +619,6 @@ async function getDockerState(force = false) {
   } catch (error) {
     const offline = {
       available: true,
-      appInstalled,
       daemonOnline: false,
       clientVersion,
       serverVersion: "",
@@ -642,7 +631,6 @@ async function getDockerState(force = false) {
 
   const value = {
     available: true,
-    appInstalled,
     daemonOnline: true,
     clientVersion,
     serverVersion,
@@ -702,33 +690,11 @@ async function startAllDockerContainers() {
   return { started: candidates.length, total: docker.containers.length };
 }
 
-async function ensureDockerEngine() {
-  let docker = await getDockerState(true);
-  if (!docker.available) throw httpError(503, "没有找到 Docker CLI");
-
-  let desktopStarted = false;
-  if (!docker.daemonOnline) {
-    if (!docker.appInstalled) throw httpError(503, "没有找到 Docker Desktop");
-    await runTool("/usr/bin/open", ["-a", "Docker"], 15000);
-    desktopStarted = true;
-
-    const deadline = Date.now() + 120000;
-    while (Date.now() < deadline) {
-      await wait(2000);
-      docker = await getDockerState(true);
-      if (docker.daemonOnline) break;
-    }
-    if (!docker.daemonOnline) {
-      throw httpError(504, "Docker Desktop 已打开，但 Docker Engine 在 2 分钟内仍未就绪");
-    }
-  }
-
-  return { docker, desktopStarted };
-}
-
 async function startRememberedDockerContainers(references) {
-  if (!references.length) return { started: 0, total: 0, desktopStarted: false, missing: [] };
-  const { docker, desktopStarted } = await ensureDockerEngine();
+  if (!references.length) return { started: 0, total: 0, missing: [] };
+  const docker = await getDockerState(true);
+  if (!docker.available) throw httpError(503, "没有找到 Docker CLI");
+  if (!docker.daemonOnline) throw httpError(503, "Docker Engine 尚未启动");
   const matched = docker.containers.filter((container) => references.some((reference) => dockerReferenceMatches(reference, container)));
   const candidates = matched.filter((item) => !item.running);
 
@@ -738,12 +704,12 @@ async function startRememberedDockerContainers(references) {
     .filter((reference) => !docker.containers.some((container) => dockerReferenceMatches(reference, container)))
     .map((reference) => reference.name || reference.id)
     .filter(Boolean);
-  return { started: candidates.length, total: references.length, desktopStarted, missing };
+  return { started: candidates.length, total: references.length, missing };
 }
 
 async function applyAppStartupActions(catalog) {
   if (!catalog.settings.restoreLastSessionOnAppLaunch) {
-    return { restored: false, services: 0, tunnels: 0, docker: 0, dockerDesktop: false, errors: [] };
+    return { restored: false, services: 0, tunnels: 0, docker: 0, errors: [] };
   }
 
   const remembered = loadLastSessionState();
@@ -799,18 +765,16 @@ async function applyAppStartupActions(catalog) {
     }
   }
   let docker = 0;
-  let dockerDesktop = false;
   if (remembered.docker.containers.length) {
     try {
       const result = await startRememberedDockerContainers(remembered.docker.containers);
       docker = result.started;
-      dockerDesktop = result.desktopStarted;
       if (result.missing.length) errors.push(`Docker：未找到 ${result.missing.join("、")}`);
     }
     catch (error) { errors.push(`Docker：${cleanError(error)}`); }
   }
   invalidateState();
-  return { restored: true, services, tunnels, docker, dockerDesktop, errors };
+  return { restored: true, services, tunnels, docker, errors };
 }
 
 function captureLastSessionState(catalog) {

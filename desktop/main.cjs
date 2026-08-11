@@ -565,18 +565,7 @@ function terminalTaskMenu(tasks) {
 function dockerMenu(docker) {
   if (!docker.available) return [{ label: trayResourceLabel(trayText("Docker CLI 未找到", "Docker CLI Not Found"), false), enabled: false }];
   if (!docker.daemonOnline) {
-    return docker.appInstalled
-      ? [{
-          label: trayResourceLabel(trayText("Docker Desktop", "Docker Desktop"), false, trayActionsInFlight.has("docker:desktop")),
-          enabled: !trayActionsInFlight.has("docker:desktop"),
-          click: () => void performTrayMutation(
-            "docker:desktop",
-            "/api/docker/desktop/start",
-            trayText("启动 Docker Desktop 失败", "Failed to Start Docker Desktop"),
-            30000
-          )
-        }]
-      : [{ label: trayResourceLabel(trayText("Docker Desktop 未安装", "Docker Desktop Not Installed"), false), enabled: false }];
+    return [{ label: trayResourceLabel(trayText("Docker Engine 未运行", "Docker Engine Not Running"), false), enabled: false }];
   }
   if (!docker.containers.length) return [{ label: trayText("没有容器", "No Containers"), enabled: false }];
   return docker.containers.map((container) => {
@@ -682,7 +671,7 @@ function buildTrayPanelState() {
   const t = (zh, en) => language === "en-US" ? en : zh;
   const config = traySnapshot?.bootstrap?.config || readJsonFile(CATALOG_PATH, {});
   const processById = new Map((traySnapshot?.state?.processes || []).map((item) => [item.id, item]));
-  const docker = traySnapshot?.docker || { available: false, appInstalled: false, daemonOnline: false, containers: [] };
+  const docker = traySnapshot?.docker || { available: false, daemonOnline: false, containers: [] };
   const services = config.services || [];
   const tunnels = config.tunnels || [];
   const terminalTasks = config.terminalTasks || [];
@@ -733,15 +722,14 @@ function buildTrayPanelState() {
       status: t("不可用", "Unavailable")
     }];
   } else if (!docker.daemonOnline) {
-    const busy = trayActionsInFlight.has("docker:desktop");
     dockerItems = [{
-      id: "docker-desktop",
-      name: docker.appInstalled ? "Docker Desktop" : t("Docker Desktop 未安装", "Docker Desktop Not Installed"),
+      id: "docker-offline",
+      name: t("Docker Engine 未运行", "Docker Engine Not Running"),
       running: false,
-      busy,
-      disabled: !docker.appInstalled,
-      status: busy ? t("启动中", "Starting") : t("已关闭", "Off"),
-      action: docker.appInstalled ? { type: "docker-desktop" } : null
+      busy: false,
+      disabled: true,
+      status: t("已关闭", "Off"),
+      action: null
     }];
   } else {
     dockerItems = containers.map((container) => {
@@ -922,11 +910,6 @@ async function performTrayPanelAction(payload = {}) {
     return { message: trayText(`${task.name || task.id} 已交给终端执行`, `${task.name || task.id} sent to terminal`) };
   }
 
-  if (type === "docker-desktop") {
-    await runTrayMutation("docker:desktop", "/api/docker/desktop/start", 30000);
-    return { message: trayText("正在启动 Docker Desktop", "Starting Docker Desktop") };
-  }
-
   if (type === "docker") {
     const container = (traySnapshot?.docker?.containers || []).find((item) => item.id === String(payload.id || ""));
     if (!container) throw new Error("没有找到该 Docker 容器");
@@ -1011,7 +994,6 @@ function refreshTraySnapshot(force = false) {
       controlRequestJson(`/api/state${suffix}`, { timeout: 25000 }),
       controlRequestJson(`/api/docker${suffix}`, { timeout: 25000 }).catch((error) => ({
         available: false,
-        appInstalled: false,
         daemonOnline: false,
         containers: [],
         error: error.message
@@ -1290,7 +1272,6 @@ async function applyAppStartupActionsOnce() {
     });
     const started = Number(result.services || 0) + Number(result.tunnels || 0) + Number(result.docker || 0);
     if (started) log(`app startup actions started services=${result.services || 0} tunnels=${result.tunnels || 0} docker=${result.docker || 0}`);
-    if (result.dockerDesktop) log("app startup actions opened Docker Desktop and waited for Docker Engine");
     if (result.errors?.length) log(`app startup action warnings: ${result.errors.join(" | ")}`);
   } catch (error) {
     log(`app startup actions failed: ${error.message}`);

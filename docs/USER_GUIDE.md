@@ -204,11 +204,11 @@ Without portless access, links include the configured Caddy internal port, which
 
 ## 8. Docker
 
-The Docker page reads the local Docker CLI and Engine. If Engine is offline, select **Start Docker Desktop** and wait for readiness. You can then start, stop, or restart existing containers individually or start all stopped containers.
+The Docker page reads the local Docker CLI and Engine. Local Ops works with any Docker CLI-compatible runtime on `PATH` (Docker Desktop, Colima, OrbStack, Rancher Desktop, Podman, etc.). It does not launch the runtime itself — if Engine is offline, start your Docker runtime manually and the container list refreshes automatically. You can then start, stop, or restart existing containers individually or start all stopped containers.
 
 Local Ops does not create, remove, rename, export, or change restart policies for containers. Configuration export never includes Docker resources.
 
-When session restore is enabled, Local Ops records stable container identifiers plus Compose project/service information. If remembered containers need to run, it opens Docker Desktop, waits up to two minutes for Engine, and starts only those containers. Missing containers are reported and are not recreated.
+When session restore is enabled, Local Ops records stable container identifiers plus Compose project/service information. If remembered containers need to run, it starts only those containers that already exist. If Engine is offline at app launch, the restore is skipped for Docker and reported as a warning; start your Docker runtime and reopen the app to restore those containers. Missing containers are reported and are not recreated.
 
 ## 9. Terminal actions
 
@@ -281,7 +281,7 @@ Use the overflow menu for process logs or **Open Logs** in the menu-bar footer.
 - **Keychain asks repeatedly**: unlock the macOS login Keychain and save the passphrase again. Local Ops intentionally does not cache plaintext in files.
 - **A local domain does not open**: verify Caddy and the target, check the configured path, and include the current internal port unless portless access is enabled.
 - **Portless access cannot start**: another process may own local port 80, or the installed PF rule may be out of sync with the selected Caddy port. Disable the conflicting listener or use **Repair Portless Access** in the App.
-- **Docker is unavailable**: install/start Docker Desktop and wait for Engine readiness.
+- **Docker is unavailable**: install a Docker CLI-compatible runtime (Docker Desktop, Colima, OrbStack, Rancher Desktop, Podman, etc.), ensure `docker` is on `PATH`, and start its Engine.
 - **A terminal action fails**: verify Terminal/iTerm2 is installed and allow Local Ops under System Settings → Privacy & Security → Automation.
 - **The UI is stale**: use Refresh or **Settings → Reload All Configuration**.
 - **The app icon looks stale**: remove the old Dock item, launch the new app from Applications, then add it back after macOS refreshes IconServices.

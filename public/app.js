@@ -221,7 +221,6 @@ function bindEvents() {
     if (file) void importConfigurationContent(file.name, file.text());
   });
   document.querySelector("#portless-button").addEventListener("click", togglePortlessAccess);
-  document.querySelector("#docker-desktop-button").addEventListener("click", startDockerDesktop);
   document.querySelector("#logs-close").addEventListener("click", () => document.querySelector("#logs-dialog").close());
   document.querySelector("#logs-refresh").addEventListener("click", () => loadLogs(ui.activeLogId));
   document.querySelectorAll("dialog").forEach((dialog) => dialog.addEventListener("close", restoreToastStack));
@@ -688,7 +687,6 @@ function renderDocker() {
   const notice = document.querySelector("#docker-notice");
   const title = document.querySelector("#docker-notice-title");
   const copy = document.querySelector("#docker-notice-copy");
-  const desktopButton = document.querySelector("#docker-desktop-button");
   const body = document.querySelector("#docker-table");
   const docker = ui.docker;
   if (!docker) return;
@@ -697,8 +695,7 @@ function renderDocker() {
     runtime.innerHTML = '<span class="status-pill stopped">未安装</span>';
     notice.hidden = false;
     title.textContent = "没有找到 Docker CLI";
-    copy.textContent = "请先安装 Docker Desktop，再重新打开 Local Ops。";
-    desktopButton.hidden = true;
+    copy.textContent = "请先安装 Docker CLI 并确保其在 PATH 中，再重新打开 Local Ops。";
     body.innerHTML = '<tr><td colspan="6" class="empty-cell">Docker 尚未安装。</td></tr>';
     localizeDocument(document.querySelector('[data-page="docker"]'));
     return;
@@ -708,9 +705,8 @@ function renderDocker() {
     notice.hidden = false;
     title.textContent = "Docker Engine 尚未运行";
     copy.textContent = /cannot connect to the docker daemon/i.test(docker.error || "")
-      ? "启动 Docker Desktop，等待 Engine 就绪后即可管理本机容器。"
-      : docker.error || "启动 Docker Desktop 后即可管理本机容器。";
-    desktopButton.hidden = !docker.appInstalled;
+      ? "请启动本机 Docker Engine，就绪后列表会自动刷新。"
+      : docker.error || "请启动本机 Docker Engine，就绪后列表会自动刷新。";
     body.innerHTML = '<tr><td colspan="6" class="empty-cell">等待 Docker Engine 启动。</td></tr>';
     localizeDocument(document.querySelector('[data-page="docker"]'));
     return;
@@ -730,21 +726,6 @@ function renderDocker() {
 
 function dockerStateLabel(state) {
   return tr(({ running: "运行中", exited: "已停止", created: "已创建", paused: "已暂停", restarting: "重启中", dead: "异常" })[state] || state);
-}
-
-async function startDockerDesktop() {
-  const button = document.querySelector("#docker-desktop-button");
-  button.disabled = true;
-  try {
-    await request("/api/docker/desktop/start", { method: "POST" });
-    toast("已请求启动 Docker Desktop，Engine 就绪后列表会自动刷新");
-    await wait(1800);
-    await refreshDocker(true);
-  } catch (error) {
-    toast(error.message, "error");
-  } finally {
-    button.disabled = false;
-  }
 }
 
 function renderSettings() {

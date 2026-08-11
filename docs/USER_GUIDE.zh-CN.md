@@ -204,11 +204,11 @@ Caddy 仍按 `panel.localhost` 路由，快捷入口会保留 `/admin_abc`。
 
 ## 8. Docker
 
-Docker 页面通过本机 Docker CLI 和 Engine 读取容器。Engine 离线时点击“启动 Docker Desktop”，等待就绪后即可逐个启动、停止、重启容器，也可开启全部已停止容器。
+Docker 页面通过本机 Docker CLI 和 Engine 读取容器。Local Ops 兼容任何 Docker CLI 运行时（Docker Desktop、Colima、OrbStack、Rancher Desktop、Podman 等），只要 `docker` 命令在 PATH 中即可。Local Ops 不会自动拉起运行时——Engine 离线时请自行启动你的 Docker 运行时，容器列表会自动刷新。随后可逐个启动、停止、重启容器，也可开启全部已停止容器。
 
 Local Ops 不创建、不删除、不重命名、不导出容器，也不修改容器重启策略。配置导出永远不包含 Docker 资源。
 
-开启会话恢复后，Local Ops 会记录稳定容器 ID 及 Compose 项目 / 服务信息。如果需要恢复容器，它会打开 Docker Desktop，最多等待两分钟，然后只启动被记住的容器。已经不存在的容器只会提示，不会重建。
+开启会话恢复后，Local Ops 会记录稳定容器 ID 及 Compose 项目 / 服务信息。如果需要恢复容器，它只会启动已存在的被记住容器。若 App 启动时 Engine 仍离线，Docker 部分的恢复会被跳过并作为告警提示；请启动 Docker 运行时后重新打开 App 以恢复这些容器。已经不存在的容器只会提示，不会重建。
 
 ## 9. 终端操作
 
@@ -281,7 +281,7 @@ localops tui-core                        # Core Process Compose TUI
 - **钥匙串反复询问**：解锁 macOS 登录钥匙串并重新保存口令。Local Ops 不会把明文缓存到文件。
 - **本地域名打不开**：检查 Caddy、转发目标和路径；未启用无端口访问时，URL 要带当前 Caddy 内部端口。
 - **无端口访问失败**：本机 80 端口可能被其他进程占用，或者 PF 规则与当前 Caddy 端口不同步。停止冲突监听，或从 App 点击“修复无端口访问”。
-- **Docker 不可用**：安装或启动 Docker Desktop，等待 Engine 就绪。
+- **Docker 不可用**：安装任意 Docker CLI 兼容运行时（Docker Desktop、Colima、OrbStack、Rancher Desktop、Podman 等），确保 `docker` 在 PATH 中，并启动其 Engine。
 - **终端操作失败**：确认 Terminal / iTerm2 已安装，并在“系统设置 → 隐私与安全性 → 自动化”允许 Local Ops。
 - **界面未更新**：点击刷新，或进入“设置 → 重新加载全部配置”。
 - **Dock 图标仍是旧版**：移除 Dock 中旧图标，从“应用程序”启动新版，等 macOS 更新 IconServices 后重新固定。

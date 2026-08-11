@@ -13,7 +13,7 @@ Before describing a change as released, check [Authoritative Project Status](PRO
 - Caddy in `PATH`
 - Process Compose in `PATH`
 - Xcode Command Line Tools for the native Keychain helper
-- Docker Desktop only for the optional Docker lifecycle test
+- Docker Desktop (or any Docker CLI-compatible runtime such as Colima, OrbStack, Rancher Desktop, Podman) only for the optional Docker lifecycle test
 
 ```bash
 brew install node caddy

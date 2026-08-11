@@ -25,7 +25,7 @@ Local Ops 把 Electron 桌面 App、浏览器控制台、Process Compose 和 Cad
 
 - Apple Silicon（`arm64`）或 Intel（`x64`）Mac
 - macOS 12 Monterey 或更高版本
-- Docker 功能可选；使用时需要安装 Docker Desktop
+- Docker 功能可选；支持任何 Docker CLI 兼容的运行时（Docker Desktop、Colima、OrbStack、Rancher Desktop、Podman 等），只要 `docker` 命令在 PATH 中即可。Local Ops 不会自动拉起运行时，请自行启动，容器列表会自动刷新。
 - 系统自带 Terminal.app；iTerm2 为可选项
 
 v1.8.5 同时提供 `arm64` 与 `x64` 安装包，请按机型选择对应版本。
@@ -39,7 +39,7 @@ v1.8.5 同时提供 `arm64` 与 `x64` 安装包，请按机型选择对应版本
 | SSH 敏感信息 | 验证加密私钥口令，并且只保存到 macOS 钥匙串 |
 | 现有服务 | 监控由其他 App 管理的端点，不重复接管进程 |
 | 反向代理 | 使用 `http://api.localhost` 或 `panel.localhost/admin` 访问本机服务 |
-| Docker | 打开 Docker Desktop，并启动、停止或重启已有容器 |
+| Docker | 启动、停止或重启已有容器，兼容任何 Docker CLI 运行时 |
 | 终端操作 | 在 Terminal.app / iTerm2 中执行保存的命令、SSH 登录或 SSH 转发 |
 | 菜单栏 | 使用 330 像素紧凑面板直接开关资源和打开地址 |
 | 实时同步 | 其他 Local Ops 客户端新增或编辑资源后，主窗口无需重新打开即可自动同步 |

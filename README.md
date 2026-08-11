@@ -25,7 +25,7 @@ Local Ops combines an Electron desktop app, a browser console, Process Compose, 
 
 - Apple Silicon (`arm64`) or Intel (`x64`) Mac
 - macOS 12 Monterey or newer
-- Docker Desktop is optional and is required only for Docker controls
+- Docker is optional; any Docker CLI-compatible runtime on `PATH` (Docker Desktop, Colima, OrbStack, Rancher Desktop, Podman, etc.) is supported. Local Ops does not launch the runtime — start it yourself and the container list refreshes automatically.
 - Terminal.app is built in; iTerm2 is optional
 
 Both `arm64` and `x64` DMGs are provided in v1.8.5; pick the one matching your Mac.
@@ -39,7 +39,7 @@ Both `arm64` and `x64` DMGs are provided in v1.8.5; pick the one matching your M
 | SSH secrets | Verify encrypted private-key passphrases and store them only in macOS Keychain |
 | Existing services | Monitor endpoints already owned by another app without taking over their processes |
 | Reverse proxy | Open local services at names such as `http://api.localhost` or `panel.localhost/admin` |
-| Docker | Launch Docker Desktop and start, stop, or restart existing containers |
+| Docker | Start, stop, or restart existing containers from any Docker CLI-compatible runtime |
 | Terminal actions | Run saved commands, SSH logins, or SSH forwards in Terminal.app or iTerm2 |
 | Menu bar | Use a compact 330 px panel for first-level controls and quick links |
 | Live synchronization | Keep the main window aligned with resources added or edited by another Local Ops client without reopening the App |
