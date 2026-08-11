@@ -30,9 +30,15 @@ jobs:
           cache-dependency-path: desktop/package-lock.json
 
       - name: Install Caddy and Process Compose
+        env:
+          ARCH_SUFFIX: ${{ matrix.arch == 'arm64' && 'arm64' || 'amd64' }}
         run: |
           brew install caddy
-          brew install F1bonacc1/process-compose/process-compose
+          curl -L "https://github.com/F1bonacc1/process-compose/releases/latest/download/process-compose_darwin_${ARCH_SUFFIX}.tar.gz" -o /tmp/pc.tar.gz
+          tar -xzf /tmp/pc.tar.gz -C /tmp
+          sudo mv /tmp/process-compose /usr/local/bin/process-compose
+          sudo chmod +x /usr/local/bin/process-compose
+          process-compose version
 
       - name: Install desktop dependencies
         working-directory: desktop
