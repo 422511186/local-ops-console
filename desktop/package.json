@@ -14,8 +14,12 @@
     "start": "electron .",
     "icon": "zsh scripts/generate-icon.zsh",
     "bundle": "zsh scripts/prepare-bundle.zsh",
-    "pack": "npm run icon && npm run bundle && electron-builder --mac dir --arm64",
-    "dmg": "npm run icon && npm run bundle && electron-builder --mac dmg --arm64"
+    "pack": "npm run icon && npm run bundle && electron-builder --mac dir",
+    "pack:arm64": "npm run icon && npm run bundle && electron-builder --mac dir --arm64",
+    "pack:x64": "npm run icon && npm run bundle && electron-builder --mac dir --x64",
+    "dmg": "npm run icon && npm run bundle && electron-builder --mac dmg --arm64",
+    "dmg:arm64": "npm run icon && npm run bundle && electron-builder --mac dmg --arm64",
+    "dmg:x64": "npm run icon && npm run bundle && electron-builder --mac dmg --x64"
   },
   "devDependencies": {
     "electron": "^43.2.0",
@@ -57,11 +61,13 @@
     "afterPack": "scripts/after-pack.cjs",
     "mac": {
       "bundleVersion": "1.8.5",
+      "minimumSystemVersion": "12.0.0",
       "target": [
         {
           "target": "dmg",
           "arch": [
-            "arm64"
+            "arm64",
+            "x64"
           ]
         }
       ],

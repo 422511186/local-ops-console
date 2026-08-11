@@ -23,12 +23,12 @@ Local Ops 把 Electron 桌面 App、浏览器控制台、Process Compose 和 Cad
 
 ## 系统要求
 
-- Apple Silicon（`arm64`）Mac
+- Apple Silicon（`arm64`）或 Intel（`x64`）Mac
 - macOS 12 Monterey 或更高版本
 - Docker 功能可选；使用时需要安装 Docker Desktop
 - 系统自带 Terminal.app；iTerm2 为可选项
 
-v1.8.5 暂不提供 Intel（`x64`）安装包。
+v1.8.5 同时提供 `arm64` 与 `x64` 安装包，请按机型选择对应版本。
 
 ## 功能一览
 
@@ -49,7 +49,7 @@ v1.8.5 暂不提供 Intel（`x64`）安装包。
 
 ## 安装
 
-1. 从 [Releases](https://github.com/Arvinnma/local-ops-console/releases/latest) 下载 `Local-Ops-1.8.5-arm64.dmg`。
+1. 从 [Releases](https://github.com/Arvinnma/local-ops-console/releases/latest) 下载 `Local-Ops-1.8.5-arm64.dmg`（Apple Silicon）或 `Local-Ops-1.8.5-x64.dmg`（Intel）。
 2. 打开 DMG，把 **Local Ops** 拖到“应用程序”。
 3. 从“应用程序”启动 **Local Ops**。
 
@@ -155,7 +155,7 @@ npm ci
 npm run dmg
 ```
 
-安装包输出到 `desktop/dist/Local-Ops-1.8.5-arm64.dmg`。打包步骤会把当前 Caddy 与 Process Compose 二进制复制进 App。
+安装包输出到 `desktop/dist/Local-Ops-1.8.5-arm64.dmg`（Apple Silicon）或 `desktop/dist/Local-Ops-1.8.5-x64.dmg`（Intel）。打包步骤会把当前 Caddy 与 Process Compose 二进制复制进 App。
 
 修改打包、原生 Helper、回环监听或 Electron 安全设置前，请先阅读[开发与发布文档](docs/DEVELOPMENT.md)。
 

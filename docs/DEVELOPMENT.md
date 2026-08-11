@@ -2,13 +2,13 @@
 
 ## Supported build target
 
-Local Ops v1.8.5 ships an Apple Silicon (`arm64`) macOS package. Intel (`x64`) and universal packages are not part of the current release matrix.
+Local Ops v1.8.5 ships macOS packages for both Apple Silicon (`arm64`) and Intel (`x64`). Universal packages are not part of the current release matrix; instead, two DMGs are produced from native builds on each architecture.
 
 Before describing a change as released, check [Authoritative Project Status](PROJECT_STATUS.md). It records the installed build, public GitHub/tag/artifact baseline, and private Forgejo/runtime baseline separately. A private post-release hotfix is not part of an older public tag merely because its App bundle still carries the same version number.
 
 ## Prerequisites
 
-- Apple Silicon Mac running macOS 12 or newer
+- Apple Silicon (`arm64`) or Intel (`x64`) Mac running macOS 12 or newer
 - Node.js 22.12 or newer and npm
 - Caddy in `PATH`
 - Process Compose in `PATH`
@@ -107,23 +107,29 @@ The Electron renderer is sandboxed, has no Node integration, denies permission r
 cd desktop
 npm run icon
 npm run bundle
-npm run dmg
+npm run dmg           # build for the host architecture (arm64 on Apple Silicon, x64 on Intel)
+npm run dmg:arm64     # explicitly build the Apple Silicon DMG
+npm run dmg:x64       # explicitly build the Intel DMG
 ```
 
 The bundle step:
 
 1. copies safe backend source and the example catalog;
-2. copies arm64 Caddy and Process Compose binaries from `PATH`;
-3. compiles the arm64 Security.framework Keychain helper;
+2. copies the host architecture's Caddy and Process Compose binaries from `PATH`;
+3. compiles the host architecture's Security.framework Keychain helper;
 4. writes a bundle manifest containing versions and architecture;
 5. packages an ad-hoc-signed Electron app and DMG.
 
-Output:
+Output (depending on the build architecture):
 
 ```text
 desktop/dist/mac-arm64/Local Ops.app
 desktop/dist/Local-Ops-1.8.5-arm64.dmg
+desktop/dist/mac-x64/Local Ops.app
+desktop/dist/Local-Ops-1.8.5-x64.dmg
 ```
+
+> Build the `arm64` DMG on an Apple Silicon Mac and the `x64` DMG on an Intel Mac. `scripts/build-app.zsh` auto-selects the host architecture; override with `LOCAL_OPS_BUILD_ARCH=arm64|x64` if needed. Cross-architecture builds require supplying matching Caddy and Process Compose binaries via `PATH` (and optionally setting `LOCAL_OPS_KEYCHAIN_ARCH=arm64|x86_64|universal` for the Keychain helper).
 
 To build, replace the app in Applications, re-sign ad hoc, verify the signature, and launch it:
 
@@ -141,7 +147,7 @@ The command-by-command gate, cold-start matrix, SSH/TCP liveness versus HTTP rea
 4. Run syntax checks, unit tests, Keychain integration, installed smoke, automated browser QA, and optional Docker mutation smoke.
 5. Run Gitleaks against both Git history and the full working tree with redaction enabled.
 6. Build the DMG and verify:
-   - `arm64` for the app executable, Caddy, Process Compose, and Keychain helper;
+   - the build architecture (`arm64` on Apple Silicon, `x64` on Intel) for the app executable, Caddy, Process Compose, and Keychain helper;
    - valid deep ad-hoc signature;
    - expected bundle identifier and version;
    - no real catalog, token, last-session file, `.env`, private key, or logs in the app/DMG;
@@ -150,7 +156,7 @@ The command-by-command gate, cold-start matrix, SSH/TCP liveness versus HTTP rea
 7. Re-run browser and menu-bar QA from the packaged app in Chinese and English.
 8. Generate the SHA-256 checksum and add it to the current file under `docs/releases/`.
 9. Commit and push only after the secret audit passes; verify the intended remote ref rather than assuming every remote should advance.
-10. Create a signed Git tag for the current version when possible and publish the GitHub Release with the arm64 DMG and checksum.
+10. Create a signed Git tag for the current version when possible and publish the GitHub Release with both the `arm64` and `x64` DMGs and their checksums.
 
 Public distribution should eventually replace ad-hoc signing with Apple Developer ID signing, Hardened Runtime, entitlements, and notarization.
 

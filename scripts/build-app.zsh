@@ -13,14 +13,28 @@ if [[ ! -w "$TARGET_DIR" ]]; then
   command mkdir -p "$TARGET_DIR"
 fi
 
+# 默认按宿主架构构建，可通过 LOCAL_OPS_BUILD_ARCH=arm64|x64 覆盖。
+# Intel Mac 上 uname -m 返回 x86_64，归一化为 electron-builder 使用的 x64。
+case "${LOCAL_OPS_BUILD_ARCH:-}" in
+  arm64|x64) ARCH="$LOCAL_OPS_BUILD_ARCH" ;;
+  '')
+    case "$(uname -m)" in
+      arm64) ARCH="arm64" ;;
+      x86_64) ARCH="x64" ;;
+      *) command printf '%s\n' "不支持的宿主架构：$(uname -m)" >&2; exit 1 ;;
+    esac
+    ;;
+  *) command printf '%s\n' "LOCAL_OPS_BUILD_ARCH 仅支持 arm64 或 x64" >&2; exit 1 ;;
+esac
+
 cd "$DESKTOP"
 npm install
-npm run dmg
+"$(command -v npm)" run "dmg:${ARCH}"
 
-SOURCE_APP="$DESKTOP/dist/mac-arm64/Local Ops.app"
+SOURCE_APP="$DESKTOP/dist/mac-${ARCH}/Local Ops.app"
 TARGET_APP="$TARGET_DIR/Local Ops.app"
 APP_VERSION="$(node -p 'require("./package.json").version')"
-DMG_PATH="$DESKTOP/dist/Local-Ops-${APP_VERSION}-arm64.dmg"
+DMG_PATH="$DESKTOP/dist/Local-Ops-${APP_VERSION}-${ARCH}.dmg"
 
 if [[ ! -d "$SOURCE_APP" ]]; then
   command printf '%s\n' "没有找到构建产物：$SOURCE_APP" >&2

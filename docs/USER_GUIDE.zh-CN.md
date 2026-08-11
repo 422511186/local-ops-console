@@ -2,13 +2,13 @@
 
 [English](USER_GUIDE.md) · [项目说明](../README.zh-CN.md) · [安全说明](../SECURITY.md)
 
-本文适用于 Local Ops v1.8.5 与 Apple Silicon macOS。
+本文适用于 Local Ops v1.8.5 与 Apple Silicon（`arm64`）/ Intel（`x64`）macOS。
 
 ## 1. 安装、升级与打开方式
 
 ### 安装
 
-1. 从 GitHub Releases 下载 `Local-Ops-1.8.5-arm64.dmg`。
+1. 从 GitHub Releases 下载 `Local-Ops-1.8.5-arm64.dmg`（Apple Silicon）或 `Local-Ops-1.8.5-x64.dmg`（Intel）。
 2. 打开 DMG，把 **Local Ops** 拖到“应用程序”。
 3. 从“应用程序”启动 App。
 
