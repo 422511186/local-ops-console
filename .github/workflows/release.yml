@@ -46,7 +46,10 @@ jobs:
 
       - name: Build DMG
         working-directory: desktop
-        run: npm run dmg:${{ matrix.arch }}
+        run: |
+          npm run icon
+          npm run bundle
+          npx electron-builder --mac dmg --${{ matrix.arch }} --publish never
 
       - name: Compute SHA-256
         id: checksum
